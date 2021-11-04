@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="styl.css" rel="stylesheet">
+    <title>Menadżer haseł</title>
+</head>
+<body onload="init()">
+    <h1>Lista haseł i loginów</h1>
+    <h2>Witaj! Oto lista twoich haseł oraz loginów:</h2>
+    <div id="menadzer">
+    </div>
+    <h2>Podaj login i hasło</h2>
+    <input type="text" name="" id="funkcja">
+    <button onclick="addfunkcja()">Dodaj</button>
+    <script>
+        function init() {
+            if (window.localStorage.getItem('name') === null) {
+                let name = window.prompt("Jak się nazywasz ? : ");
+                window.localStorage.setItem('name', name);
+            }
+            document.getElementById('name').innerHTML = window.localStorage.getItem('name');
+            showMenadzer();
+        }
+        function addfunkcja() {
+            let funkcja = document.getElementById('funkcja').value;
+            let menadzer = JSON.parse(window.localStorage.getItem('menadzer'));
+            try {
+                menadzer.push(funkcja);
+            } catch {
+                menadzer = Array();
+                menadzer.push(funkcja);
+            }
+            window.localStorage.setItem('menadzer', JSON.stringify(menadzer));
+            document.getElementById('funkcja').value = "";
+            showMenadzer();
+        }
+        function showMenadzer() {
+            let funkcjaArray = JSON.parse(window.localStorage.getItem('menadzer'));
+            if(funkcjaArray === null) return;
+            let menadzer = document.getElementById('menadzer');
+            let htmlBuffer = "";
+            htmlBuffer += "<ul>";
+            for (let i = 0; i < funkcjaArray.length; i++) {
+                htmlBuffer += "<li><button onclick=\"removefunkcja("+i+")\">Skasuj</button>" 
+                                + funkcjaArray[i] + "</li>";
+            }
+            htmlBuffer += "</ul>";
+            menadzer.innerHTML = htmlBuffer;
+        }
+        function removefunkcja(i) {
+            let funkcjaArray = JSON.parse(window.localStorage.getItem('menadzer'));
+            console.log(funkcjaArray);
+            funkcjaArray.splice(i, 1);
+            console.log(funkcjaArray);
+            window.localStorage.setItem('menadzer', JSON.stringify(funkcjaArray));
+            showMenadzer();
+        }
+    </script>
+</body>
+</html>
